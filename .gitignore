@@ -24,3 +24,12 @@ proguard/
 
 # Log Files
 *.log
+
+# maven
+/target/
+
+#ant
+build.xml
+
+#NetBeans
+nbactions.xml
