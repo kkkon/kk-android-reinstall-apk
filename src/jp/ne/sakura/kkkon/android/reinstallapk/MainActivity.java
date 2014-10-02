@@ -1,0 +1,231 @@
+package jp.ne.sakura.kkkon.android.reinstallapk;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends Activity
+{
+    private static final String TAG = "kk-ReInstall-Apk";
+
+    private List<MyListData> mDataList = new ArrayList<MyListData>(128);
+
+    public class MyListData
+    {
+        private Drawable image;
+        private String text;
+        private String packageName;
+
+        public void setImage( final Drawable image )
+        {
+            this.image = image;
+        }
+        public Drawable getImage()
+        {
+            return this.image;
+        }
+
+        public void setPackageName( final String packageName )
+        {
+            this.packageName = packageName;
+        }
+        public String getPackageName()
+        {
+            return this.packageName;
+        }
+
+        public void setText( final String text )
+        {
+            this.text = text;
+        }
+        public String getText()
+        {
+            return this.text;
+        }
+    }
+
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        LinearLayout layout = new LinearLayout( this );
+        layout.setOrientation( LinearLayout.VERTICAL );
+        ImageView imageView = new ImageView( this );
+        layout.addView( imageView);
+
+        ListView listView = new ListView( this );
+
+        TextView emptyTextView = new TextView( this );
+        emptyTextView.setText( "No items found" );
+        listView.setEmptyView( emptyTextView );
+
+        {
+            PackageManager  pm = getPackageManager();
+            if ( null != pm )
+            {
+                final List<ApplicationInfo> listApplicationInfo = pm.getInstalledApplications( 0 );
+                if ( null != listApplicationInfo )
+                {
+                    for ( final ApplicationInfo appInfo : listApplicationInfo )
+                    {
+                        if ( null == appInfo )
+                        {
+                            continue;
+                        }
+                        if ( null != appInfo.sourceDir )
+                        {
+                            if ( appInfo.sourceDir.startsWith( "/system/" ) )
+                            {
+                                continue;
+                            }
+
+                            Log.d( TAG, "package=" + appInfo.packageName );
+                            Log.d( TAG, "name=" + appInfo.name );
+                            Log.d( TAG, "sourcedir=" + appInfo.sourceDir );
+                            Log.d( TAG, "label=" + appInfo.loadLabel( pm ) );
+
+                            MyListData item = new MyListData();
+                            {
+                                final CharSequence label = appInfo.loadLabel( pm );
+                                if ( null == label )
+                                {
+                                    item.setText( appInfo.packageName );
+                                }
+                                else
+                                {
+                                    item.setText( label.toString() );
+                                }
+                            }
+                            item.setPackageName( appInfo.packageName );
+
+                            final Drawable drawable = appInfo.loadIcon(pm);
+                            if ( null != drawable )
+                            {
+                                Log.d( TAG, "icon: w=" + drawable.getIntrinsicWidth() + ",h=" + drawable.getIntrinsicHeight() );
+                            }
+                            item.setImage( drawable );
+
+                            mDataList.add( item );
+                        }
+                    }
+                }
+            }
+        }
+        MyAdapter adapter = new MyAdapter( this );
+        listView.setAdapter( adapter );
+
+        layout.addView( listView );
+
+        setContentView( layout );
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    public class MyAdapter extends BaseAdapter
+    {
+        private Context mContext;
+
+        public MyAdapter( Context context )
+        {
+            this.mContext = context;
+        }
+
+        @Override
+        public int getCount()
+        {
+            if ( null != mDataList )
+            {
+                return mDataList.size();
+            }
+
+            return 0;
+        }
+
+        @Override
+        public Object getItem(int i)
+        {
+            if ( null != mDataList )
+            {
+                return mDataList.get(i);
+            }
+
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i)
+        {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup vg)
+        {
+            View v = view;
+            if ( null == v )
+            {
+
+                LinearLayout layout = new LinearLayout( mContext );
+                layout.setOrientation( LinearLayout.HORIZONTAL );
+
+                ImageView imageView = new ImageView( mContext );
+                imageView.setId( 0 );
+                imageView.setScaleType( ImageView.ScaleType.FIT_XY );
+                imageView.setLayoutParams( new ViewGroup.LayoutParams( 144, 144 ) );
+                imageView.setAdjustViewBounds( true );
+
+                TextView textView = new TextView( mContext );
+                textView.setId( 1 );
+                textView.setLayoutParams( new ViewGroup.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT ) );
+                textView.setGravity( Gravity.CENTER_VERTICAL );
+
+                layout.addView( imageView );
+                layout.addView( textView );
+
+                v = layout;
+            }
+
+            MyListData itemData = (MyListData)this.getItem(i);
+            if ( null != itemData )
+            {
+                ImageView imageView = (ImageView) v.findViewById(0);
+                TextView textView = (TextView) v.findViewById(1);
+                if ( null != imageView )
+                {
+                    imageView.setBackgroundDrawable( itemData.getImage() );
+                }
+                if ( null != textView )
+                {
+                    textView.setText( itemData.getText() );
+                }
+            }
+
+            return v;
+        }
+
+    }
+}
