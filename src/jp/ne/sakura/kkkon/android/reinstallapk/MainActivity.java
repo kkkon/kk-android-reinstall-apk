@@ -33,6 +33,8 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
     private ListView            mListView;
     private TextView            mUnknownSourceTextView;
 
+    private static final int    INTENT_REQUEST_CODE_INSTALL = 0;
+
     public class MyListData
     {
         private Drawable image;
@@ -408,7 +410,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                         Intent promptInstall = new Intent(Intent.ACTION_VIEW);
                         promptInstall.setDataAndType(Uri.fromFile( fileApk ), "application/vnd.android.package-archive");
                         //promptInstall.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
-                        this.startActivity( promptInstall );
+                        this.startActivityForResult( promptInstall, INTENT_REQUEST_CODE_INSTALL );
                     }
                     else
                     {
@@ -425,36 +427,37 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                     Toast   toast = Toast.makeText( this, R.string.apk_not_found, Toast.LENGTH_LONG );
                     toast.show();
                 }
-                else
-                {
-                    boolean needRefresh = false;
+            }
+        }
+    }
 
-                    {
-                        final String packageName = itemData.getPackageName();
-                        {
-                            final PackageManager pm = this.getPackageManager();
-                            if ( null != pm )
-                            {
-                                try
-                                {
-                                    final ApplicationInfo appInfo = pm.getApplicationInfo( packageName, 0 );
-                                    if ( null != appInfo )
-                                    {
-                                        itemData.setApkPath( appInfo.sourceDir );
-                                        this.mDataList.set( position, itemData );
-                                        needRefresh = true;
-                                    }
-                                }
-                                catch ( PackageManager.NameNotFoundException e )
-                                {
-                                    Log.d( TAG, "got Exception: " + e.toString(), e);
-                                }
-                            }
-                        }
-                    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d( TAG, "requestCode=" + requestCode + ",resultCode=" + resultCode + ",intent=" + data );
+
+        if ( INTENT_REQUEST_CODE_INSTALL == requestCode )
+        {
+            boolean needRefresh = false;
+
+            // TODO queue update, current all refresh
+            if ( null != mDataList )
+            {
+                mDataList.clear();
+            }
+            this.makeApplicationList();
+            needRefresh = true;
+
+            if ( needRefresh )
+            {
+                if ( null != mListView )
+                {
+                    mListView.requestLayout();
                 }
             }
         }
     }
+
 
 }
