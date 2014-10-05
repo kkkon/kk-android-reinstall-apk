@@ -125,7 +125,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
             }
 
             {
-                final long value = o1.getLatestTime() - o2.getLatestTime();
+                final long value = o2.getLatestTime() - o1.getLatestTime();
                 if ( value < 0 )
                 {
                     result = -1;
@@ -313,7 +313,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                         if ( null != packageInfo )
                         {
                             final long firstInstallTime = packageInfo.firstInstallTime; // API9
-                            final long lastUpdateTime = packageInfo.firstInstallTime; // API9
+                            final long lastUpdateTime = packageInfo.lastUpdateTime; // API9
 
                             Log.d( TAG,  "firstInstallTime=" + firstInstallTime );
                             Log.d( TAG,  "lastUpdateTime=" + lastUpdateTime );
@@ -527,7 +527,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                                                         if ( null != packageInfo )
                                                         {
                                                             final long firstInstallTime = packageInfo.firstInstallTime; // API9
-                                                            final long lastUpdateTime = packageInfo.firstInstallTime; // API9
+                                                            final long lastUpdateTime = packageInfo.lastUpdateTime; // API9
 
                                                             Log.d( TAG,  "firstInstallTime=" + firstInstallTime );
                                                             Log.d( TAG,  "lastUpdateTime=" + lastUpdateTime );
