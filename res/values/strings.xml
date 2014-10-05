@@ -6,4 +6,7 @@
     <string name="unknown_sources">Unknown Sources</string>
     <string name="unknown_sources_ok">OK</string>
     <string name="unknown_sources_ng">NG</string>
+
+    <string name="apk_not_found">Apk file does not exist or is not readable</string>
+
 </resources>

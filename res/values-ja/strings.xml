@@ -6,4 +6,7 @@
     <string name="unknown_sources">提供元不明のアプリ</string>
     <string name="unknown_sources_ok">許可</string>
     <string name="unknown_sources_ng">不許可</string>
+
+    <string name="apk_not_found">APK ファイルが存在しないか読み取れません</string>
+
 </resources>

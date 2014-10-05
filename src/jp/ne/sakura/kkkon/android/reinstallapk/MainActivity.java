@@ -2,25 +2,30 @@ package jp.ne.sakura.kkkon.android.reinstallapk;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import jp.ne.sakura.kkkon.android.exceptionhandler.SettingsCompat;
 
-public class MainActivity extends Activity
+public class MainActivity extends Activity implements ListView.OnItemClickListener
 {
     private static final String TAG = "kk-ReInstall-Apk";
 
@@ -166,6 +171,8 @@ public class MainActivity extends Activity
 
         MyAdapter adapter = new MyAdapter( this );
         mListView.setAdapter( adapter );
+
+        mListView.setOnItemClickListener( this );
 
         layout.addView( mListView );
 
@@ -368,6 +375,58 @@ public class MainActivity extends Activity
             return v;
         }
 
+    }
+
+    public void onItemClick(AdapterView<?> av, View view, int position, long id)
+    {
+        if ( this.mListView == av )
+        {
+            if ( null == this.mDataList )
+            {
+                Log.d( TAG, "mDataList is null " );
+                return;
+            }
+
+            final MyListData itemData = this.mDataList.get( position );
+            if ( null == itemData )
+            {
+                Log.d( TAG, "itemData is null index=" + position );
+                return;
+            }
+
+            {
+                final String apkPath = itemData.getApkPath();
+
+                boolean installCalled = false;
+                if ( null != apkPath )
+                {
+                    final File fileApk = new File(apkPath);
+                    if ( fileApk.exists() )
+                    {
+                        installCalled = true;
+
+                        Intent promptInstall = new Intent(Intent.ACTION_VIEW);
+                        promptInstall.setDataAndType(Uri.fromFile( fileApk ), "application/vnd.android.package-archive");
+                        //promptInstall.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
+                        this.startActivity( promptInstall );
+                    }
+                    else
+                    {
+                        Log.d( TAG, "fileApk not exists. path=" + fileApk.getAbsolutePath() );
+                    }
+                }
+                else
+                {
+                    Log.d( TAG, "apkPath is null" );
+                }
+
+                if ( !installCalled )
+                {
+                    Toast   toast = Toast.makeText( this, R.string.apk_not_found, Toast.LENGTH_LONG );
+                    toast.show();
+                }
+            }
+        }
     }
 
 }
