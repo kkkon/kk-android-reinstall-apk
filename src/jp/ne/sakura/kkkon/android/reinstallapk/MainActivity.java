@@ -213,6 +213,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         mListView.setEmptyView( emptyTextView );
 
         makeApplicationList();
+        Collections.sort( mDataList, new ComparatorLastestTime() );
 
         MyAdapter adapter = new MyAdapter( this );
         mListView.setAdapter( adapter );
@@ -332,7 +333,6 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
             }
         }
 
-        Collections.sort( mDataList, new ComparatorLastestTime() );
     }
 
 
@@ -518,7 +518,29 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                                             {
                                                 Log.d( TAG, "old ApkPath=" + apkPath );
                                                 Log.d( TAG, "new ApkPath=" + appInfo.sourceDir );
+
                                                 itemData.setApkPath( appInfo.sourceDir );
+                                                {
+                                                    try
+                                                    {
+                                                        final PackageInfo packageInfo = pm.getPackageInfo( appInfo.packageName, 0 );
+                                                        if ( null != packageInfo )
+                                                        {
+                                                            final long firstInstallTime = packageInfo.firstInstallTime; // API9
+                                                            final long lastUpdateTime = packageInfo.firstInstallTime; // API9
+
+                                                            Log.d( TAG,  "firstInstallTime=" + firstInstallTime );
+                                                            Log.d( TAG,  "lastUpdateTime=" + lastUpdateTime );
+                                                            itemData.setFirstInstallTime( firstInstallTime );
+                                                            itemData.setLastUpdateTime( lastUpdateTime );
+                                                        }
+                                                    }
+                                                    catch ( PackageManager.NameNotFoundException e )
+                                                    {
+                                                        Log.e( TAG, "got Exception=" + e.toString(), e );
+                                                    }
+                                                }
+
                                                 mDataList.set( itemPosition, itemData );
 
                                                 needRefresh = true;
@@ -536,13 +558,15 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                 }
 
                 mUpdateList.clear();
+                Collections.sort( mDataList, new ComparatorLastestTime() );
             }
 
             if ( needRefresh )
             {
                 if ( null != mListView )
                 {
-                    mListView.requestLayout();
+                    //mListView.requestLayout();
+                    mListView.invalidateViews();
                 }
             }
         }
