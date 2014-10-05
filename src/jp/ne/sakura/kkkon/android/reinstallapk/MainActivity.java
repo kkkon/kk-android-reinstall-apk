@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import jp.ne.sakura.kkkon.android.exceptionhandler.SettingsCompat;
 
@@ -81,12 +83,19 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
             this.firstInstallTime = firstInstallTime;
         }
 
-        public long getLastUpdateTime() {
+        public long getLastUpdateTime()
+        {
             return lastUpdateTime;
         }
         public void setLastUpdateTime(long lastUpdateTime)
         {
             this.lastUpdateTime = lastUpdateTime;
+        }
+
+        public long getLatestTime()
+        {
+            final long latestTime = Math.max( lastUpdateTime, firstInstallTime );
+            return latestTime;
         }
 
         public String getApkPath()
@@ -96,6 +105,39 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         public void setApkPath(String apkPath)
         {
             this.apkPath = apkPath;
+        }
+
+    }
+
+    public class ComparatorLastestTime implements Comparator<MyListData>
+    {
+        public int compare(MyListData o1, MyListData o2)
+        {
+            int result = 0;
+
+            if ( null == o1 )
+            {
+                return result;
+            }
+            if ( null == o2 )
+            {
+                return result;
+            }
+
+            {
+                final long value = o1.getLatestTime() - o2.getLatestTime();
+                if ( value < 0 )
+                {
+                    result = -1;
+                }
+                else
+                if ( value > 0 )
+                {
+                    result = 1;
+                }
+            }
+
+            return result;
         }
 
     }
@@ -289,6 +331,8 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                 mDataList.add( item );
             }
         }
+
+        Collections.sort( mDataList, new ComparatorLastestTime() );
     }
 
 
