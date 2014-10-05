@@ -35,6 +35,7 @@ public class MainActivity extends Activity
         private String packageName;
         private long    firstInstallTime;
         private long    lastUpdateTime;
+        private String  apkPath;
 
         public void setImage( final Drawable image )
         {
@@ -80,7 +81,15 @@ public class MainActivity extends Activity
             this.lastUpdateTime = lastUpdateTime;
         }
 
-        
+        public String getApkPath()
+        {
+            return apkPath;
+        }
+        public void setApkPath(String apkPath)
+        {
+            this.apkPath = apkPath;
+        }
+
     }
 
     /** Called when the activity is first created. */
@@ -223,6 +232,7 @@ public class MainActivity extends Activity
                 Log.d( TAG, "label=" + appInfo.loadLabel( pm ) );
 
                 MyListData item = new MyListData();
+                item.setApkPath( appInfo.sourceDir );
                 {
                     final CharSequence label = appInfo.loadLabel( pm );
                     if ( null == label )
@@ -359,4 +369,5 @@ public class MainActivity extends Activity
         }
 
     }
+
 }
