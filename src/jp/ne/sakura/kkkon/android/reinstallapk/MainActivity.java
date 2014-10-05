@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
+import jp.ne.sakura.kkkon.android.exceptionhandler.SettingsCompat;
 
 public class MainActivity extends Activity
 {
@@ -25,6 +26,7 @@ public class MainActivity extends Activity
 
     private List<MyListData>    mDataList = new ArrayList<MyListData>(128);
     private ListView            mListView;
+    private TextView            mUnknownSourceTextView;
 
     public class MyListData
     {
@@ -85,10 +87,63 @@ public class MainActivity extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        Log.d( TAG, "onCreate:");
         super.onCreate(savedInstanceState);
 
         LinearLayout layout = new LinearLayout( this );
         layout.setOrientation( LinearLayout.VERTICAL );
+
+        mUnknownSourceTextView = new TextView( this );
+        {
+            final StringBuilder sb = new StringBuilder();
+
+            {
+                final String label = this.getString( R.string.system_setting );
+                if ( null != label )
+                {
+                    sb.append( label );
+                }
+            }
+            sb.append( ": " );
+            {
+                final String label = this.getString( R.string.unknown_sources );
+                if ( null != label )
+                {
+                    sb.append( label );
+                }
+            }
+            sb.append( " " );
+
+            SettingsCompat.initialize( this.getApplicationContext() );
+            final boolean isAllow = SettingsCompat.isAllowedNonMarketApps();
+            if ( isAllow )
+            {
+                final String label = this.getString( R.string.unknown_sources_ok );
+                if ( null != label )
+                {
+                    sb.append( label );
+                }
+                else
+                {
+                    sb.append( "OK" );
+                }
+            }
+            else
+            {
+                final String label = this.getString( R.string.unknown_sources_ng );
+                if ( null != label )
+                {
+                    sb.append( label );
+                }
+                else
+                {
+                    sb.append( "NG" );
+                }
+            }
+            mUnknownSourceTextView.setGravity( Gravity.RIGHT );
+            mUnknownSourceTextView.setText( sb.toString() );
+        }
+        layout.addView( mUnknownSourceTextView );
         ImageView imageView = new ImageView( this );
         layout.addView( imageView);
 
@@ -202,6 +257,13 @@ public class MainActivity extends Activity
         super.onPause();
     }
 
+
+    
+    
+    
+    
+    
+    
     public class MyAdapter extends BaseAdapter
     {
         private Context mContext;

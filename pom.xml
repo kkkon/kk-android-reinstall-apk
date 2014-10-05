@@ -152,13 +152,11 @@
             <systemPath>${android.sdk.path}/platforms/android-10/android.jar</systemPath>
         </dependency>
 
-        <!--
         <dependency>
             <groupId>jp.ne.sakura.kkkon.android.exceptionhandler</groupId>
             <artifactId>android-exception-handler</artifactId>
             <version>0.7</version>
         </dependency>
-        -->
     </dependencies>
 
 
@@ -176,12 +174,10 @@
     </distributionManagement>
 
     <repositories>
-        <!--
         <repository>
             <id>release-kkkon.github.io-android-exception-handler</id>
             <name>Android Exception Handler Maven Release Repository</name>
             <url>http://kkkon.github.io/android-exception-handler/maven/releases</url>
         </repository>
-        -->
     </repositories>
 </project>
