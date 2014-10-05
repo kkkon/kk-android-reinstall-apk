@@ -259,6 +259,7 @@ public class MainActivity extends Activity
                 textView.setId( 1 );
                 textView.setLayoutParams( new ViewGroup.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT ) );
                 textView.setGravity( Gravity.CENTER_VERTICAL );
+                textView.setPadding( 20, 20, 20, 20 );
 
                 layout.addView( imageView );
                 layout.addView( textView );
