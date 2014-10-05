@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">起動修復</string>
+
+    <string name="system_setting">システム設定</string>
+    <string name="unknown_sources">提供元不明のアプリ</string>
+    <string name="unknown_sources_ok">許可</string>
+    <string name="unknown_sources_ng">不許可</string>
 </resources>

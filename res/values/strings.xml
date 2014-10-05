@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">App ReInstaller</string>
+
+    <string name="system_setting">System Setting</string>
+    <string name="unknown_sources">Unknown Sources</string>
+    <string name="unknown_sources_ok">OK</string>
+    <string name="unknown_sources_ng">NG</string>
 </resources>
