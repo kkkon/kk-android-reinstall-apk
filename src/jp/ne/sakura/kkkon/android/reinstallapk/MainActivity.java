@@ -3,6 +3,7 @@ package jp.ne.sakura.kkkon.android.reinstallapk;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -29,6 +30,8 @@ public class MainActivity extends Activity
         private Drawable image;
         private String text;
         private String packageName;
+        private long    firstInstallTime;
+        private long    lastUpdateTime;
 
         public void setImage( final Drawable image )
         {
@@ -56,6 +59,25 @@ public class MainActivity extends Activity
         {
             return this.text;
         }
+
+        public long getFirstInstallTime()
+        {
+            return firstInstallTime;
+        }
+        public void setFirstInstallTime(long firstInstallTime)
+        {
+            this.firstInstallTime = firstInstallTime;
+        }
+
+        public long getLastUpdateTime() {
+            return lastUpdateTime;
+        }
+        public void setLastUpdateTime(long lastUpdateTime)
+        {
+            this.lastUpdateTime = lastUpdateTime;
+        }
+
+        
     }
 
     /** Called when the activity is first created. */
@@ -94,6 +116,17 @@ public class MainActivity extends Activity
                             {
                                 continue;
                             }
+                            if ( null != appInfo.packageName )
+                            {
+                                if ( appInfo.packageName.startsWith( "com.example." ) )
+                                {
+                                    continue;
+                                }
+                                if ( appInfo.packageName.startsWith( "com.android." ) )
+                                {
+                                    continue;
+                                }
+                            }
 
                             Log.d( TAG, "package=" + appInfo.packageName );
                             Log.d( TAG, "name=" + appInfo.name );
@@ -121,6 +154,35 @@ public class MainActivity extends Activity
                             }
                             item.setImage( drawable );
 
+                            {
+                                PackageInfo packageInfo = pm.getPackageArchiveInfo( appInfo.sourceDir, 0 );
+                                if ( null == packageInfo )
+                                {
+                                    try
+                                    {
+                                        packageInfo = pm.getPackageInfo( appInfo.packageName, 0 );
+                                    }
+                                    catch ( PackageManager.NameNotFoundException e )
+                                    {
+                                        Log.e( TAG, "got Exception=" + e.toString(), e );
+                                    }
+
+                                }
+
+                                if ( null != packageInfo )
+                                {
+                                    final long firstInstallTime = packageInfo.firstInstallTime; // API9
+                                    final long lastUpdateTime = packageInfo.firstInstallTime; // API9
+
+                                    Log.d( TAG,  "firstInstallTime=" + firstInstallTime );
+                                    Log.d( TAG,  "lastUpdateTime=" + lastUpdateTime );
+                                    item.setFirstInstallTime( firstInstallTime );
+                                    item.setLastUpdateTime( lastUpdateTime );
+                                }
+                            }
+
+
+                            Log.d( TAG,  "" );
                             mDataList.add( item );
                         }
                     }
