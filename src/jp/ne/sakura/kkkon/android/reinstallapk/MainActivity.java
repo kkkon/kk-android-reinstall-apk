@@ -23,7 +23,8 @@ public class MainActivity extends Activity
 {
     private static final String TAG = "kk-ReInstall-Apk";
 
-    private List<MyListData> mDataList = new ArrayList<MyListData>(128);
+    private List<MyListData>    mDataList = new ArrayList<MyListData>(128);
+    private ListView            mListView;
 
     public class MyListData
     {
@@ -91,11 +92,11 @@ public class MainActivity extends Activity
         ImageView imageView = new ImageView( this );
         layout.addView( imageView);
 
-        ListView listView = new ListView( this );
+        mListView = new ListView( this );
 
         TextView emptyTextView = new TextView( this );
         emptyTextView.setText( "No items found" );
-        listView.setEmptyView( emptyTextView );
+        mListView.setEmptyView( emptyTextView );
 
         {
             PackageManager  pm = getPackageManager();
@@ -190,9 +191,9 @@ public class MainActivity extends Activity
             }
         }
         MyAdapter adapter = new MyAdapter( this );
-        listView.setAdapter( adapter );
+        mListView.setAdapter( adapter );
 
-        layout.addView( listView );
+        layout.addView( mListView );
 
         setContentView( layout );
     }
