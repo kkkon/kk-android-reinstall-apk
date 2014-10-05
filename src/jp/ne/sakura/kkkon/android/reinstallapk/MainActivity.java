@@ -425,6 +425,34 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                     Toast   toast = Toast.makeText( this, R.string.apk_not_found, Toast.LENGTH_LONG );
                     toast.show();
                 }
+                else
+                {
+                    boolean needRefresh = false;
+
+                    {
+                        final String packageName = itemData.getPackageName();
+                        {
+                            final PackageManager pm = this.getPackageManager();
+                            if ( null != pm )
+                            {
+                                try
+                                {
+                                    final ApplicationInfo appInfo = pm.getApplicationInfo( packageName, 0 );
+                                    if ( null != appInfo )
+                                    {
+                                        itemData.setApkPath( appInfo.sourceDir );
+                                        this.mDataList.set( position, itemData );
+                                        needRefresh = true;
+                                    }
+                                }
+                                catch ( PackageManager.NameNotFoundException e )
+                                {
+                                    Log.d( TAG, "got Exception: " + e.toString(), e);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
