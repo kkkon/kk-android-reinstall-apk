@@ -153,97 +153,8 @@ public class MainActivity extends Activity
         emptyTextView.setText( "No items found" );
         mListView.setEmptyView( emptyTextView );
 
-        {
-            PackageManager  pm = getPackageManager();
-            if ( null != pm )
-            {
-                final List<ApplicationInfo> listApplicationInfo = pm.getInstalledApplications( 0 );
-                if ( null != listApplicationInfo )
-                {
-                    for ( final ApplicationInfo appInfo : listApplicationInfo )
-                    {
-                        if ( null == appInfo )
-                        {
-                            continue;
-                        }
-                        if ( null != appInfo.sourceDir )
-                        {
-                            if ( appInfo.sourceDir.startsWith( "/system/" ) )
-                            {
-                                continue;
-                            }
-                            if ( null != appInfo.packageName )
-                            {
-                                if ( appInfo.packageName.startsWith( "com.example." ) )
-                                {
-                                    continue;
-                                }
-                                if ( appInfo.packageName.startsWith( "com.android." ) )
-                                {
-                                    continue;
-                                }
+        makeApplicationList();
 
-                                if ( appInfo.packageName.startsWith( "com.google.android." ) )
-                                {
-                                    continue;
-                                }
-                            }
-
-                            Log.d( TAG, "package=" + appInfo.packageName );
-                            Log.d( TAG, "name=" + appInfo.name );
-                            Log.d( TAG, "sourcedir=" + appInfo.sourceDir );
-                            Log.d( TAG, "label=" + appInfo.loadLabel( pm ) );
-
-                            MyListData item = new MyListData();
-                            {
-                                final CharSequence label = appInfo.loadLabel( pm );
-                                if ( null == label )
-                                {
-                                    item.setText( appInfo.packageName );
-                                }
-                                else
-                                {
-                                    item.setText( label.toString() );
-                                }
-                            }
-                            item.setPackageName( appInfo.packageName );
-
-                            final Drawable drawable = appInfo.loadIcon(pm);
-                            if ( null != drawable )
-                            {
-                                Log.d( TAG, "icon: w=" + drawable.getIntrinsicWidth() + ",h=" + drawable.getIntrinsicHeight() );
-                            }
-                            item.setImage( drawable );
-
-                            {
-                                try
-                                {
-                                    final PackageInfo packageInfo = pm.getPackageInfo( appInfo.packageName, 0 );
-                                    if ( null != packageInfo )
-                                    {
-                                        final long firstInstallTime = packageInfo.firstInstallTime; // API9
-                                        final long lastUpdateTime = packageInfo.firstInstallTime; // API9
-
-                                        Log.d( TAG,  "firstInstallTime=" + firstInstallTime );
-                                        Log.d( TAG,  "lastUpdateTime=" + lastUpdateTime );
-                                        item.setFirstInstallTime( firstInstallTime );
-                                        item.setLastUpdateTime( lastUpdateTime );
-                                    }
-                                }
-                                catch ( PackageManager.NameNotFoundException e )
-                                {
-                                    Log.e( TAG, "got Exception=" + e.toString(), e );
-                                }
-                            }
-
-
-                            Log.d( TAG,  "" );
-                            mDataList.add( item );
-                        }
-                    }
-                }
-            }
-        }
         MyAdapter adapter = new MyAdapter( this );
         mListView.setAdapter( adapter );
 
@@ -263,12 +174,107 @@ public class MainActivity extends Activity
     }
 
 
-    
-    
-    
-    
-    
-    
+    private void makeApplicationList()
+    {
+        PackageManager  pm = getPackageManager();
+        if ( null == pm )
+        {
+            return;
+        }
+
+        final List<ApplicationInfo> listApplicationInfo = pm.getInstalledApplications( 0 );
+        if ( null == listApplicationInfo )
+        {
+            return;
+        }
+
+        for ( final ApplicationInfo appInfo : listApplicationInfo )
+        {
+            if ( null == appInfo )
+            {
+                continue;
+            }
+            if ( null != appInfo.sourceDir )
+            {
+                if ( appInfo.sourceDir.startsWith( "/system/" ) )
+                {
+                    continue;
+                }
+                if ( null != appInfo.packageName )
+                {
+                    if ( appInfo.packageName.startsWith( "com.example." ) )
+                    {
+                        continue;
+                    }
+                    if ( appInfo.packageName.startsWith( "com.android." ) )
+                    {
+                        continue;
+                    }
+
+                    if ( appInfo.packageName.startsWith( "com.google.android." ) )
+                    {
+                        continue;
+                    }
+                }
+
+                Log.d( TAG, "package=" + appInfo.packageName );
+                Log.d( TAG, "name=" + appInfo.name );
+                Log.d( TAG, "sourcedir=" + appInfo.sourceDir );
+                Log.d( TAG, "label=" + appInfo.loadLabel( pm ) );
+
+                MyListData item = new MyListData();
+                {
+                    final CharSequence label = appInfo.loadLabel( pm );
+                    if ( null == label )
+                    {
+                        item.setText( appInfo.packageName );
+                    }
+                    else
+                    {
+                        item.setText( label.toString() );
+                    }
+                }
+                item.setPackageName( appInfo.packageName );
+
+                final Drawable drawable = appInfo.loadIcon(pm);
+                if ( null != drawable )
+                {
+                    Log.d( TAG, "icon: w=" + drawable.getIntrinsicWidth() + ",h=" + drawable.getIntrinsicHeight() );
+                }
+                item.setImage( drawable );
+
+                {
+                    try
+                    {
+                        final PackageInfo packageInfo = pm.getPackageInfo( appInfo.packageName, 0 );
+                        if ( null != packageInfo )
+                        {
+                            final long firstInstallTime = packageInfo.firstInstallTime; // API9
+                            final long lastUpdateTime = packageInfo.firstInstallTime; // API9
+
+                            Log.d( TAG,  "firstInstallTime=" + firstInstallTime );
+                            Log.d( TAG,  "lastUpdateTime=" + lastUpdateTime );
+                            item.setFirstInstallTime( firstInstallTime );
+                            item.setLastUpdateTime( lastUpdateTime );
+                        }
+                    }
+                    catch ( PackageManager.NameNotFoundException e )
+                    {
+                        Log.e( TAG, "got Exception=" + e.toString(), e );
+                    }
+                }
+
+
+                Log.d( TAG,  "" );
+                mDataList.add( item );
+            }
+        }
+    }
+
+
+
+
+
     public class MyAdapter extends BaseAdapter
     {
         private Context mContext;
