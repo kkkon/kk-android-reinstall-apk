@@ -34,6 +34,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
     private TextView            mUnknownSourceTextView;
 
     private static final int    INTENT_REQUEST_CODE_INSTALL = 0;
+    private List<Integer>       mUpdateList = new ArrayList<Integer>(16);
 
     public class MyListData
     {
@@ -406,6 +407,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                     if ( fileApk.exists() )
                     {
                         installCalled = true;
+                        mUpdateList.add( position );
 
                         Intent promptInstall = new Intent(Intent.ACTION_VIEW);
                         promptInstall.setDataAndType(Uri.fromFile( fileApk ), "application/vnd.android.package-archive");
@@ -441,13 +443,56 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         {
             boolean needRefresh = false;
 
-            // TODO queue update, current all refresh
-            if ( null != mDataList )
+            if ( null != mUpdateList )
             {
-                mDataList.clear();
+                if ( ! mUpdateList.isEmpty() )
+                {
+                    Log.d( TAG, "mUpdateList: size=" + mUpdateList.size() );
+                    final PackageManager pm = this.getPackageManager();
+                    if ( null != pm )
+                    {
+                        for ( final Integer itemPosition : mUpdateList )
+                        {
+                            if ( null == itemPosition )
+                            {
+                                continue;
+                            }
+
+                            Log.d( TAG, "mUpdateList: itemPosition=" + itemPosition );
+                            final MyListData itemData = mDataList.get( itemPosition );
+                            if ( null != itemData )
+                            {
+                                try
+                                {
+                                    final String apkPath = itemData.getApkPath();
+                                    final ApplicationInfo appInfo = pm.getApplicationInfo( itemData.packageName, 0 );
+                                    if ( null != appInfo )
+                                    {
+                                        if ( null != appInfo.sourceDir && null != apkPath )
+                                        {
+                                            if ( 0 != appInfo.sourceDir.compareTo( apkPath) )
+                                            {
+                                                Log.d( TAG, "old ApkPath=" + apkPath );
+                                                Log.d( TAG, "new ApkPath=" + appInfo.sourceDir );
+                                                itemData.setApkPath( appInfo.sourceDir );
+                                                mDataList.set( itemPosition, itemData );
+
+                                                needRefresh = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                catch ( PackageManager.NameNotFoundException e )
+                                {
+                                    Log.d( TAG, "got Exception: " + e.toString(), e );
+                                }
+                            }
+                        }
+                    }
+                }
+
+                mUpdateList.clear();
             }
-            this.makeApplicationList();
-            needRefresh = true;
 
             if ( needRefresh )
             {
