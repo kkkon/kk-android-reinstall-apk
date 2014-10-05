@@ -156,29 +156,23 @@ public class MainActivity extends Activity
                             item.setImage( drawable );
 
                             {
-                                PackageInfo packageInfo = pm.getPackageArchiveInfo( appInfo.sourceDir, 0 );
-                                if ( null == packageInfo )
+                                try
                                 {
-                                    try
+                                    final PackageInfo packageInfo = pm.getPackageInfo( appInfo.packageName, 0 );
+                                    if ( null != packageInfo )
                                     {
-                                        packageInfo = pm.getPackageInfo( appInfo.packageName, 0 );
-                                    }
-                                    catch ( PackageManager.NameNotFoundException e )
-                                    {
-                                        Log.e( TAG, "got Exception=" + e.toString(), e );
-                                    }
+                                        final long firstInstallTime = packageInfo.firstInstallTime; // API9
+                                        final long lastUpdateTime = packageInfo.firstInstallTime; // API9
 
+                                        Log.d( TAG,  "firstInstallTime=" + firstInstallTime );
+                                        Log.d( TAG,  "lastUpdateTime=" + lastUpdateTime );
+                                        item.setFirstInstallTime( firstInstallTime );
+                                        item.setLastUpdateTime( lastUpdateTime );
+                                    }
                                 }
-
-                                if ( null != packageInfo )
+                                catch ( PackageManager.NameNotFoundException e )
                                 {
-                                    final long firstInstallTime = packageInfo.firstInstallTime; // API9
-                                    final long lastUpdateTime = packageInfo.firstInstallTime; // API9
-
-                                    Log.d( TAG,  "firstInstallTime=" + firstInstallTime );
-                                    Log.d( TAG,  "lastUpdateTime=" + lastUpdateTime );
-                                    item.setFirstInstallTime( firstInstallTime );
-                                    item.setLastUpdateTime( lastUpdateTime );
+                                    Log.e( TAG, "got Exception=" + e.toString(), e );
                                 }
                             }
 
