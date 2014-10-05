@@ -182,6 +182,11 @@ public class MainActivity extends Activity
                                 {
                                     continue;
                                 }
+
+                                if ( appInfo.packageName.startsWith( "com.google.android." ) )
+                                {
+                                    continue;
+                                }
                             }
 
                             Log.d( TAG, "package=" + appInfo.packageName );
