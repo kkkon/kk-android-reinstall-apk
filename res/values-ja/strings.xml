@@ -2,6 +2,10 @@
 <resources>
     <string name="app_name">起動修復</string>
 
+    <string name="warning_text">このアプリケーションを使用したことによって生じる結果には何も保障いたしません。\nそれでも使用することに同意しますか？</string>
+    <string name="warning_yes">同意する</string>
+    <string name="warning_no">同意しない</string>
+
     <string name="system_setting">システム設定</string>
     <string name="unknown_sources">提供元不明のアプリ</string>
     <string name="unknown_sources_ok">許可</string>

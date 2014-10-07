@@ -1,7 +1,9 @@
 package jp.ne.sakura.kkkon.android.reinstallapk;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -34,6 +36,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
     private List<MyListData>    mDataList = new ArrayList<MyListData>(128);
     private ListView            mListView;
     private TextView            mUnknownSourceTextView;
+    private LinearLayout        mLayout;
 
     private static final int    INTENT_REQUEST_CODE_INSTALL = 0;
     private List<Integer>       mUpdateList = new ArrayList<Integer>(16);
@@ -149,8 +152,8 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         Log.d( TAG, "onCreate:");
         super.onCreate(savedInstanceState);
 
-        LinearLayout layout = new LinearLayout( this );
-        layout.setOrientation( LinearLayout.VERTICAL );
+        mLayout = new LinearLayout( this );
+        mLayout.setOrientation( LinearLayout.VERTICAL );
 
         mUnknownSourceTextView = new TextView( this );
         {
@@ -202,9 +205,9 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
             mUnknownSourceTextView.setGravity( Gravity.RIGHT );
             mUnknownSourceTextView.setText( sb.toString() );
         }
-        layout.addView( mUnknownSourceTextView );
+        mLayout.addView( mUnknownSourceTextView );
         ImageView imageView = new ImageView( this );
-        layout.addView( imageView);
+        mLayout.addView( imageView);
 
         mListView = new ListView( this );
 
@@ -220,9 +223,31 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
         mListView.setOnItemClickListener( this );
 
-        layout.addView( mListView );
+        mLayout.addView( mListView );
 
-        setContentView( layout );
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder( this );
+        alertDialogBuilder.setMessage( R.string.warning_text );
+        alertDialogBuilder.setNegativeButton( R.string.warning_no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface di, int i)
+            {
+                System.exit( 0 );
+            }
+        });
+        alertDialogBuilder.setPositiveButton( R.string.warning_yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface di, int i)
+            {
+                setContentView( mLayout );
+            }
+        });
+        alertDialogBuilder.setOnCancelListener( new DialogInterface.OnCancelListener()
+        {
+            public void onCancel(DialogInterface di) {
+                System.exit( 0 );
+            }
+        });
+
+        alertDialogBuilder.show();
+        //setContentView( mLayout );
     }
 
     @Override

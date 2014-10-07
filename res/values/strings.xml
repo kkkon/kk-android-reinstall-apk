@@ -2,6 +2,10 @@
 <resources>
     <string name="app_name">App ReInstaller</string>
 
+    <string name="warning_text">Nothing will guarantee the results produced by using this application.\nDo you agree that you still use ?</string>
+    <string name="warning_yes">Yes. I agree</string>
+    <string name="warning_no">No. I\'m NOT agree</string>
+
     <string name="system_setting">System Setting</string>
     <string name="unknown_sources">Unknown Sources</string>
     <string name="unknown_sources_ok">OK</string>
