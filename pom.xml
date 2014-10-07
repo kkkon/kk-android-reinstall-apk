@@ -65,8 +65,11 @@
                 <extensions>true</extensions>
                 <configuration>
                     <sdkPlatform>10</sdkPlatform>
+                    <zipalignSkip>false</zipalignSkip>
+                    <zipalignVerbose>true</zipalignVerbose>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -180,4 +183,55 @@
             <url>http://kkkon.github.io/android-exception-handler/maven/releases</url>
         </repository>
     </repositories>
+
+    <profiles>
+        <profile>
+            <id>release-profile</id>
+            <properties>
+                <android.apk.debug>false</android.apk.debug>
+                <android.sign.debug>false</android.sign.debug>
+                <android.release>true</android.release>
+
+                <jarsigner.skip>false</jarsigner.skip>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jarsigner-plugin</artifactId>
+                        <version>1.3.2</version>
+                        <executions>
+                            <execution>
+                                <id>signing</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <inherited>true</inherited>
+                                <configuration>
+                                    <includes>
+                                        <include>${project.build.directory}/${project.finalName}.apk</include>
+                                    </includes>
+                                    <arguments>
+                                        <argument>-sigalg</argument><argument>MD5withRSA</argument>
+                                        <argument>-digestalg</argument><argument>SHA1</argument>
+                                    </arguments>
+                                    <verbose>true</verbose>
+                                    <removeExistingSignatures>true</removeExistingSignatures>
+
+                                    <skip>${jarsigner.skip}</skip>
+
+                                    <keystore>${jarsigner.keystore}</keystore>
+                                    <storepass>${jarsigner.storepass}</storepass>
+                                    <alias>${jarsigner.alias}</alias>
+                                    <keypass>${jarsigner.keypass}</keypass>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
