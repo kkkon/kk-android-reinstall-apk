@@ -227,29 +227,36 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
         mLayout.addView( mListView );
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder( this );
-        alertDialogBuilder.setMessage( R.string.warning_text );
-        alertDialogBuilder.setNegativeButton( R.string.warning_no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface di, int i)
-            {
-                System.exit( 0 );
-            }
-        });
-        alertDialogBuilder.setPositiveButton( R.string.warning_yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface di, int i)
-            {
-                setContentView( mLayout );
-            }
-        });
-        alertDialogBuilder.setOnCancelListener( new DialogInterface.OnCancelListener()
+        if ( AppSetting.isWarningAccepted() )
         {
-            public void onCancel(DialogInterface di) {
-                System.exit( 0 );
-            }
-        });
+            setContentView( mLayout );
+        }
+        else
+        {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder( this );
+            alertDialogBuilder.setMessage( R.string.warning_text );
+            alertDialogBuilder.setNegativeButton( R.string.warning_no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface di, int i)
+                {
+                    System.exit( 0 );
+                }
+            });
+            alertDialogBuilder.setPositiveButton( R.string.warning_yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface di, int i)
+                {
+                    AppSetting.setWarningAccepted( true );
+                    setContentView( mLayout );
+                }
+            });
+            alertDialogBuilder.setOnCancelListener( new DialogInterface.OnCancelListener()
+            {
+                public void onCancel(DialogInterface di) {
+                    System.exit( 0 );
+                }
+            });
 
-        alertDialogBuilder.show();
-        //setContentView( mLayout );
+            alertDialogBuilder.show();
+        }
     }
 
     @Override
