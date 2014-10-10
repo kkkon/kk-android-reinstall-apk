@@ -10,7 +10,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -368,10 +370,37 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
     public class MyAdapter extends BaseAdapter
     {
         private Context mContext;
+        private int     sizeIcon = 144;
 
         public MyAdapter( Context context )
         {
             this.mContext = context;
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            Log.d( TAG, "DisplayMetrics.density=" + displayMetrics.density );
+            Log.d( TAG, "DisplayMetrics.scaledDensity=" + displayMetrics.scaledDensity );
+            Log.d( TAG, "DisplayMetrics.xdpi=" + displayMetrics.xdpi );
+            Log.d( TAG, "DisplayMetrics.ydpi=" + displayMetrics.ydpi );
+            Log.d( TAG, "DisplayMetrics.widthPixels=" + displayMetrics.widthPixels );
+            Log.d( TAG, "DisplayMetrics.heightPixels=" + displayMetrics.heightPixels );
+
+            int apiLevel = 3;
+            try
+            {
+                apiLevel = Integer.valueOf( Build.VERSION.SDK );
+            }
+            catch ( NumberFormatException e)
+            {
+                Log.d( TAG, "got Exception:", e );
+            }
+
+            if ( apiLevel < 7 )
+            {
+                if ( displayMetrics.density < 1.0f )
+                {
+                    sizeIcon = 72;
+                }
+            }
         }
 
         @Override
@@ -415,7 +444,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                 ImageView imageView = new ImageView( mContext );
                 imageView.setId( 0 );
                 imageView.setScaleType( ImageView.ScaleType.FIT_XY );
-                imageView.setLayoutParams( new ViewGroup.LayoutParams( 144, 144 ) );
+                imageView.setLayoutParams( new ViewGroup.LayoutParams( sizeIcon, sizeIcon ) );
                 imageView.setAdjustViewBounds( true );
 
                 TextView textView = new TextView( mContext );
