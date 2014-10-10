@@ -337,8 +337,9 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                         final PackageInfo packageInfo = pm.getPackageInfo( appInfo.packageName, 0 );
                         if ( null != packageInfo )
                         {
-                            final long firstInstallTime = packageInfo.firstInstallTime; // API9
-                            final long lastUpdateTime = packageInfo.lastUpdateTime; // API9
+                            final PackageInfoCompat packageInfoCompat = new PackageInfoCompat( packageInfo );
+                            final long firstInstallTime = packageInfoCompat.getFirstInstallTime(); // API9
+                            final long lastUpdateTime = packageInfoCompat.getLastUpdateTime(); // API9
 
                             Log.d( TAG,  "firstInstallTime=" + firstInstallTime );
                             Log.d( TAG,  "lastUpdateTime=" + lastUpdateTime );
@@ -551,8 +552,9 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                                                         final PackageInfo packageInfo = pm.getPackageInfo( appInfo.packageName, 0 );
                                                         if ( null != packageInfo )
                                                         {
-                                                            final long firstInstallTime = packageInfo.firstInstallTime; // API9
-                                                            final long lastUpdateTime = packageInfo.lastUpdateTime; // API9
+                                                            final PackageInfoCompat packageInfoCompat = new PackageInfoCompat( packageInfo );
+                                                            final long firstInstallTime = packageInfoCompat.getFirstInstallTime(); // API9
+                                                            final long lastUpdateTime = packageInfoCompat.getLastUpdateTime(); // API9
 
                                                             Log.d( TAG,  "firstInstallTime=" + firstInstallTime );
                                                             Log.d( TAG,  "lastUpdateTime=" + lastUpdateTime );
