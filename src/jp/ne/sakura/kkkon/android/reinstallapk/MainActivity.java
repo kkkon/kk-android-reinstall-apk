@@ -45,12 +45,22 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
     public class MyListData
     {
+        private int     flags;
         private Drawable image;
         private String text;
         private String packageName;
         private long    firstInstallTime;
         private long    lastUpdateTime;
         private String  apkPath;
+
+        public int getFlags()
+        {
+            return flags;
+        }
+        public void setFlags( final int flags )
+        {
+            this.flags = flags;
+        }
 
         public void setImage( final Drawable image )
         {
@@ -296,6 +306,11 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                 {
                     continue;
                 }
+                if ( 1 == (appInfo.flags & ApplicationInfo.FLAG_SYSTEM) )
+                {
+                    continue;
+                }
+
                 if ( null != appInfo.packageName )
                 {
                     if ( appInfo.packageName.startsWith( "com.example." ) )
@@ -319,6 +334,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                 Log.d( TAG, "label=" + appInfo.loadLabel( pm ) );
 
                 MyListData item = new MyListData();
+                item.setFlags( appInfo.flags );
                 item.setApkPath( appInfo.sourceDir );
                 {
                     final CharSequence label = appInfo.loadLabel( pm );
