@@ -189,7 +189,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
             sb.append( " " );
 
             SettingsCompat.initialize( this.getApplicationContext() );
-            final boolean isAllow = SettingsCompat.isAllowedNonMarketApps();
+            final boolean isAllow = this.canRequestPackageInstalls(); // SettingsCompat.isAllowedNonMarketApps();
             if ( isAllow )
             {
                 final String label = this.getString( R.string.unknown_sources_ok );
@@ -686,4 +686,56 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         return result;
     }
 
+    public boolean canRequestPackageInstalls()
+    {
+        boolean isAllow = false;
+        {
+            final int runtimeSDKversion = getBuildVersionSdkInt();
+            if ( 26 <= runtimeSDKversion )
+            {
+                final PackageManager pm = getPackageManager();
+                if ( null != pm )
+                {
+                    // isAllow = pm.canRequestPackageInstalls();
+                    try
+                    {
+                        final Class<?>  clz = pm.getClass(); //Class.forName("android.content.pm.PackageManager");
+                        final java.lang.reflect.Method method_canRequestPackageInstalls =
+                                clz.getMethod( "canRequestPackageInstalls", new Class[] { } );
+
+                        if ( null != method_canRequestPackageInstalls )
+                        {
+                            final Object ret = method_canRequestPackageInstalls.invoke( pm, new Object[] { } );
+                            if ( null != ret )
+                            {
+                                isAllow = ((Boolean)ret).booleanValue();
+                            }
+                        }
+                    }
+                    catch ( java.lang.NoSuchMethodException e )
+                    {
+                        Log.d( TAG, "got Exception: " + e.toString(), e );
+                    }
+                    catch ( java.lang.IllegalAccessException e )
+                    {
+                        Log.d( TAG, "got Exception: " + e.toString(), e );
+                    }
+                    catch ( java.lang.reflect.InvocationTargetException e )
+                    {
+                        Log.d( TAG, "got Exception: " + e.toString(), e );
+                    }
+                    catch ( java.lang.IllegalArgumentException e )
+                    {
+                        Log.d( TAG, "got Exception: " + e.toString(), e );
+                    }
+                }
+            }
+            else
+            {
+                isAllow = SettingsCompat.isAllowedNonMarketApps();
+            }
+        }
+
+        return isAllow;
+    }
 }

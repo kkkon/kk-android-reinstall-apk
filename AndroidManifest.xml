@@ -32,6 +32,9 @@
     </provider>
 
   </application>
-  <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="24" />
+  <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="26" />
+
+  <!-- api26 -->
+  <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
 </manifest> 
