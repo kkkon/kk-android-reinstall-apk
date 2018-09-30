@@ -532,7 +532,11 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                         mUpdateList.add( position );
 
                         Intent promptInstall = new Intent(Intent.ACTION_VIEW);
-                        promptInstall.setDataAndType(Uri.fromFile( fileApk ), "application/vnd.android.package-archive");
+                        //final Uri uriApk = Uri.fromFile(fileApk);
+                        //final Uri uriApk = Uri.parse( fileApk.getAbsolutePath() ); // not work
+                        //final Uri uriApk = Uri.parse( "file:///" + fileApk.getAbsolutePath() ); // not work
+                        final Uri uriApk = this.getUriFromFile( fileApk );
+                        promptInstall.setDataAndType(uriApk, "application/vnd.android.package-archive");
                         //promptInstall.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
                         this.startActivityForResult( promptInstall, INTENT_REQUEST_CODE_INSTALL );
                     }
@@ -651,5 +655,35 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         }
     }
 
+    private static int getBuildVersionSdkInt()
+    {
+        final String runtimeSDKversion = Build.VERSION.SDK;
+        int value = -1;
+        try
+        {
+            value = Integer.parseInt( runtimeSDKversion );
+        }
+        catch ( NumberFormatException e )
+        {
+            value = 3;
+        }
+        return value;
+    }
+
+    public Uri getUriFromFile( final File fileApk )
+    {
+        Uri result = null;
+
+        final int runtimeSDKversion = getBuildVersionSdkInt();
+        if ( runtimeSDKversion < 24 )
+        {
+            result = Uri.fromFile(fileApk);
+        }
+        else
+        {
+            result = FileProvider.getUriForFile(fileApk);
+        }
+        return result;
+    }
 
 }
