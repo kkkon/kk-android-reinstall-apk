@@ -7,7 +7,7 @@
 
     <groupId>jp.ne.sakura.kkkon.android.reinstallapk</groupId>
     <artifactId>kk-android-reinstall-apk</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.3</version>
     <packaging>apk</packaging>
 
     <name>KK's Android ReInstall Application</name>
@@ -30,7 +30,7 @@
     <connection>scm:git:https://github.com/kkkon/kk-android-reinstall-apk.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/kkkon/kk-android-reinstall-apk.git</developerConnection>
     <url>https://github.com/kkkon/kk-android-reinstall-apk</url>
-    <tag>HEAD</tag>
+    <tag>kk-android-reinstall-apk-1.0.3</tag>
   </scm>
 
   <developers>
