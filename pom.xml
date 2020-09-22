@@ -7,7 +7,7 @@
 
     <groupId>jp.ne.sakura.kkkon.android.reinstallapk</groupId>
     <artifactId>kk-android-reinstall-apk</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
     <packaging>apk</packaging>
 
     <name>KK's Android ReInstall Application</name>
@@ -30,7 +30,7 @@
     <connection>scm:git:https://github.com/kkkon/kk-android-reinstall-apk.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/kkkon/kk-android-reinstall-apk.git</developerConnection>
     <url>https://github.com/kkkon/kk-android-reinstall-apk</url>
-    <tag>kk-android-reinstall-apk-1.0.3</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <developers>
@@ -46,6 +46,7 @@
         <maven.compiler.target>1.5</maven.compiler.target>
         
         <android.sdk.path>${env.ANDROID_HOME}</android.sdk.path>
+        <android.dex.coreLibrary>true</android.dex.coreLibrary>
 
         <dryRun>true</dryRun>
         <github.site.dryRun>true</github.site.dryRun>
@@ -54,14 +55,14 @@
     </properties>
 
     <build>
-        <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
+        <sourceDirectory>src/main</sourceDirectory>
+        <testSourceDirectory>src/test</testSourceDirectory>
 
         <plugins>
             <plugin>
-                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                <groupId>com.simpligility.maven.plugins</groupId>
                 <artifactId>android-maven-plugin</artifactId>
-                <version>3.8.2</version>
+                <version>4.6.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <sdkPlatform>10</sdkPlatform>
