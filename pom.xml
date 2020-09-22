@@ -46,7 +46,7 @@
         <maven.compiler.target>1.5</maven.compiler.target>
         
         <android.sdk.path>${env.ANDROID_HOME}</android.sdk.path>
-        <android.dex.coreLibrary>true</android.dex.coreLibrary>
+        <!--<android.dex.coreLibrary>true</android.dex.coreLibrary>-->
 
         <dryRun>true</dryRun>
         <github.site.dryRun>true</github.site.dryRun>
