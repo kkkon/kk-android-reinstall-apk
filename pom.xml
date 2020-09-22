@@ -7,7 +7,7 @@
 
     <groupId>jp.ne.sakura.kkkon.android.reinstallapk</groupId>
     <artifactId>kk-android-reinstall-apk</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4-SNAPSHOT</version>
     <packaging>apk</packaging>
 
     <name>KK's Android ReInstall Application</name>
@@ -46,6 +46,7 @@
         <maven.compiler.target>1.5</maven.compiler.target>
         
         <android.sdk.path>${env.ANDROID_HOME}</android.sdk.path>
+        <!--<android.dex.coreLibrary>true</android.dex.coreLibrary>-->
 
         <dryRun>true</dryRun>
         <github.site.dryRun>true</github.site.dryRun>
@@ -54,14 +55,14 @@
     </properties>
 
     <build>
-        <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
+        <sourceDirectory>src/main</sourceDirectory>
+        <testSourceDirectory>src/test</testSourceDirectory>
 
         <plugins>
             <plugin>
-                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                <groupId>com.simpligility.maven.plugins</groupId>
                 <artifactId>android-maven-plugin</artifactId>
-                <version>3.8.2</version>
+                <version>4.6.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <sdkPlatform>10</sdkPlatform>
@@ -118,7 +119,7 @@
             <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
-                <version>0.10-SNAPSHOT</version>
+                <version>0.12</version>
                 <inherited>true</inherited>
                 <configuration>
                     <message>Maven artifacts for ${project.artifactId} ${project.version}</message>
@@ -151,8 +152,11 @@
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
             <version>2.3.3</version>
+            <scope>provided</scope>
+            <!--
             <scope>system</scope>
             <systemPath>${android.sdk.path}/platforms/android-10/android.jar</systemPath>
+            -->
         </dependency>
 
         <dependency>
